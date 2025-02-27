@@ -1,0 +1,85 @@
+'''
+Given the mapping a = 1, b = 2, ... z = 26, and an encoded message, count the number of ways it can be decoded.
+
+For example, the message '111' would give 3, since it could be decoded as 'aaa', 'ka', and 'ak'.
+
+You can assume that the messages are decodable. For example, '001' is not allowed.
+
+'''
+import random
+
+# produces a 'random' 3 number message to be decoded
+def message():
+    num = random.randint(1, 999)
+    if num < 10:
+        message = '00' + str(num)
+    elif num < 100:
+        message = '0' + str(num)
+    else:
+        message = str(num)
+    return message
+
+def print_null_seq(message):
+    str_list = []
+    for s in message:
+        str_list.append(s)
+    str = ' '.join(str_list)
+    print(str)
+
+# for a message of length 3
+def decode_counter_run(message):
+    included = False
+    decode_count = 0
+    i = 0
+    while i < int(len(message)):
+        if int(message[i]) == 0:
+            if included == False:
+                decode_count = 0
+            return decode_count
+        elif int(message[i:i+2]) < 27 and i+2 <= int(len(message)):
+            if '0' in message[i+2:]:
+                i+=1
+                included = False
+            else:
+                decode_count +=1
+                i+=1
+                included = True
+                print(f'{message[:i]} {message[i:i+2]} {message[i+2:]}')
+        else:
+            i+=1
+            included = False
+    print_null_seq(message)
+    # adds one for the null case where each digit can be counted unless its 0
+    return decode_count + 1
+
+
+# def mes_runner(message):
+#     total = int(len(message))
+#     runs = []
+#     run = [total]
+#     i = 0
+#     while i < total:
+#         run.append(i, i+2)
+
+    
+#     run.append(int(len(message))-2)
+
+# def choose(n1, n2):
+#     return int(round(factorial(n1) / (factorial(n2) * factorial(n1 - n2))))
+        
+# def factorial(n):
+    # n_fact = n
+    # if n == 0:
+    #     n_fact = 1
+    # else:
+    #     for i in range(1, n):
+    #         n_fact *= i
+    # return n_fact
+
+
+if __name__ == "__main__":
+    message = message()
+    message = '111'
+    print(message)
+    num_decodes = decode_counter_run(message)
+    print(f'The message {message} can be decoded {num_decodes} ways')
