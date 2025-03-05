@@ -18,6 +18,8 @@ def int_list_gen(length):
 # creates a dictionary of all values and their index and sorts them by value, removing any negative and zero values as they don't help at all
 # runs through the sorted list and checks if the sum should keep the values based on their neighbors in the original list
 
+# important: doesn't work
+
 def create_index_value_dict(int_list: list):
     return {index: value for index, value in enumerate(int_list)}
 
@@ -37,20 +39,28 @@ def opt_method(int_list: list):
     sum_list = int_list.copy()
     i_diff = 0
     for i in range(len(int_list)):
-        if int_list[i] < 0:
+        if int_list[i] <= 0:
             del sum_list[i-i_diff]
             i_diff+=1
-        if get_list_value(int_list, i-1)+get_list_value(int_list, i+1) >= int_list[i]:
-            print(f'{sum_list[i-i_diff]}, {get_list_value(int_list, i-1)}+{get_list_value(int_list, i+1)}={get_list_value(int_list, i-1)+get_list_value(int_list, i+1)} ')
-            del sum_list[i-i_diff]
-            i_diff+=1
+        elif get_list_value(int_list, i-1)+get_list_value(int_list, i+1) > int_list[i]:
+            # print(f'YES {sum_list[i-i_diff]}, {get_list_value(int_list, i-1)}+{get_list_value(int_list, i+1)}={get_list_value(int_list, i-1)+get_list_value(int_list, i+1)} ')
+            if get_list_value(int_list, i-2) < get_list_value(int_list, i-1) or get_list_value(int_list, i+2) < get_list_value(int_list, i+1):
+                # print(f'for {int_list[i]} {get_list_value(int_list, i-2)} < {get_list_value(int_list, i-1)} or {get_list_value(int_list, i+2)} < {get_list_value(int_list, i+1)}')
+                del sum_list[i-i_diff]
+                i_diff+=1
+        # else:
+            # print(f'NO {sum_list[i-i_diff]}, {get_list_value(int_list, i-1)}+{get_list_value(int_list, i+1)}={get_list_value(int_list, i-1)+get_list_value(int_list, i+1)} ')
+        # print(f'{int_list} {sum_list} {i-i_diff}')
     sum_max = sum(sum_list)
     return sum_list, sum_max
 
 def get_list_value(list, index, default =0):
-    if index> 0:
+    if index >= 0:
         try:
-            return list[index]
+            if list[index]>0:
+                return list[index]
+            else:
+                return default
         except IndexError:
             return default
     else:
@@ -59,8 +69,9 @@ def get_list_value(list, index, default =0):
 
 if __name__ == '__main__':
     # int_list = int_list_gen(5)
-    # print(int_list)
-    # print(non_adj_sum(int_list))
+    int_list = [5, 9, 5, 5, 5]
+    print(int_list)
+    print(non_adj_sum(int_list))
     # int_list = [5,1,1,5]
     # print(int_list)
     # print(non_adj_sum(int_list))
@@ -68,7 +79,8 @@ if __name__ == '__main__':
     # print(int_list)
     # print(non_adj_sum(int_list))
 
-    int_list = int_list_gen(5)
+    int_list = int_list_gen(7)
+    int_list = [5, 9, 5, 9, 5, 9, 5]
     print(int_list)
     print(opt_method(int_list))
     int_list = [5,1,1,5]
